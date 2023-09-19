@@ -1,0 +1,107 @@
+DROP TABLE IF EXISTS pedidod_compra;
+
+CREATE TABLE pedidod_compra
+SELECT 
+p.ID_PRODUTO, 
+p.DESCRICAO ,
+g.NOMEGRUPO,
+p.UTRIB AS UnidadeMedida,
+SUBSTRING((p.UNITARIO - (p.unitario * 0.05)),1,4) AS ValorUnitario,
+SUM(p.QTD) AS ValorQuantidade,
+substring(round((p.UNITARIO - (p.unitario * 0.05))* SUM(p.QTD),3),1,5) AS ValorTotal
+FROM produtos_notasaida p
+LEFT JOIN lvsaidas l ON p.PRIMARIA = l.PRIMARIA
+LEFT JOIN empresas c ON l.EMPRESA = c.CODIGO_N
+LEFT JOIN produto pr ON p.ID_PRODUTO = pr.CODITEM
+LEFT JOIN grupo g ON pr.GRUPO = g.CODGRUPO
+WHERE l.NOTA IN (:NumNota) AND 
+l.EMPRESA = 1 AND pr.GRUPO =:CodGrupo GROUP BY p.ID_PRODUTO;
+SELECT * FROM  pedidod_compra  
+UNION ALL
+
+SELECT
+'--' AS ID_PRODUTO,
+'--' AS DESCRICAO,
+'--' AS NOMEGRUPO,
+'--' AS UnidadeMedida,
+'--' AS ValorUnitario,
+'--' AS ValorQuantidade,
+round(SUM(ValorTotal),2) AS ValorTotal
+FROM pedidod_compra
+
+
+
+
+
+// // Selecionar os elementos dos inputs
+// const caixas = document.getElementById('caixas');
+// const unitario = document.getElementById('unitario');
+// const fracao = document.getElementById('fracao');
+// const resultado = document.getElementById('resultado');
+
+// // Função para atualizar o resultado em tempo real
+// function atualizarResultado() {
+//   // Pegar os valores dos dois inputs
+//   var valorcaixas = parseFloat(caixas.value);
+//   var valorunitario = parseFloat(unitario.value);
+//   var valorfracao = parseFloat(fracao.value);
+//     // console.log(valorInput1);
+//   // Verificar se os valores são numéricos
+//   if (isNaN(valorcaixas) || isNaN(valorunitario) || isNaN(valorfracao)) {
+//     resultado.value = "Insira apenas números válidos";
+//     return;
+//   }
+
+//   // Somar os valores e atualizar o resultado no terceiro input
+//   var somatorioFinal = (valorunitario / valorfracao)*(valorfracao*valorcaixas);
+//   resultado.value = somatorioFinal;
+// }
+
+// // Adicionar eventos de entrada (input events) para os dois primeiros inputs
+// caixas.addEventListener('keyup', atualizarResultado);
+// fracao.addEventListener('keyup', atualizarResultado);
+// unitario.addEventListener('keyup', atualizarResultado);
+
+
+
+// <!-- Adicione esse código no seu HTML para definir os inputs -->
+// <input type="number" id="caixas">
+// <input type="number" id="unitario">
+// <input type="number" id="fracao">
+// <input type="text" id="resultado" readonly>
+
+
+  // Selecionar os elementos dos inputs
+  const caixas = document.getElementById('caixas');
+  const unitario = document.getElementById('unitario');
+  const fracao = document.getElementById('fracao');
+  const resultado = document.getElementById('resultado');
+
+  // Função para atualizar o resultado em tempo real
+  function atualizarResultado() {
+    // Pegar os valores dos dois inputs
+    var valorcaixas = parseFloat(caixas.value);
+    var valorunitario = parseFloat(unitario.value);
+    var valorfracao = parseFloat(fracao.value);
+
+    // Verificar se os valores são numéricos
+    if (isNaN(valorcaixas) || isNaN(valorunitario) || isNaN(valorfracao)) {
+      resultado.value = "Insira apenas números válidos";
+      return;
+    }
+
+    // Somar os valores e atualizar o resultado no terceiro input
+    var somatorioFinal = (valorunitario / valorfracao) * (valorfracao * valorcaixas);
+    resultado.value = somatorioFinal;
+  }
+
+  // Adicionar eventos de entrada (input events) para os três inputs
+  caixas.addEventListener('input', atualizarResultado);
+  fracao.addEventListener('input', atualizarResultado);
+  unitario.addEventListener('input', atualizarResultado);
+
+  // Adicionar evento de mudança (change event) para os três inputs
+  caixas.addEventListener('change', atualizarResultado);
+  fracao.addEventListener('change', atualizarResultado);
+  unitario.addEventListener('change', atualizarResultado);
+
