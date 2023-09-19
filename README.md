@@ -1,4 +1,4 @@
-# pedido-de-compra
+# PEDIDO DE COMPRA
 
 ![2023-09-19_17h22_01](https://github.com/OtavioAlvim/pedido-de-compra/assets/98673019/c3a410a0-5d4d-41b0-8ab5-cb3dd0cb778a)
 
